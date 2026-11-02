@@ -2,33 +2,56 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Progress Board | 需求进度看板</title>
 <meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#f5f6f8">
 <style>
-  body { font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif; background:#f5f6f8; color:#5b6472; display:flex; align-items:center; justify-content:center; min-height:100vh; margin:0; font-size:14px; }
-  .box { text-align:center; }
-  .hint { margin-top:10px; font-size:12.5px; color:#a3abb6; }
+  html, body { margin:0; padding:0; height:100%; background:#f5f6f8; overflow:hidden; }
+  iframe { position:fixed; inset:0; width:100%; height:100%; border:0; display:block; background:#f5f6f8; }
+  #fb { position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+        background:#f5f6f8; color:#5b6472; font-size:14px; line-height:1.6; text-align:center; padding:24px;
+        font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif;
+        transition:opacity .2s ease-out; }
+  #fb.hide { opacity:0; pointer-events:none; }
+  #hint { font-size:12.5px; color:#a3abb6; margin-top:4px; }
+  #hint a { color:#0f6f5c; }
 </style>
 </head>
 <body>
-  <div class="box">
-    <p>Opening the Progress Board…</p>
-    <p>正在打开需求进度看板…</p>
-    <p class="hint" id="hint"></p>
-  </div>
-  <script>
-  /* Target is stored encoded so the board URL never appears in plain text in this public repo.
-     Decoded value = progress board on the Wahda platform. */
-  (function () {
-    var enc = "aHR0cHM6Ly93YWhkYS1wcm9ncmVzcy5hcHAud29ya2J1ZGR5Lmhvc3QvP3NoYXJlY29kZT1FRFVPUU1RT0FL";
-    try {
-      var url = atob(enc);
-      if (url.indexOf("https://") === 0) { location.replace(url); return; }
-    } catch (e) {}
-    document.getElementById("hint").textContent =
-      "Redirect failed — please use the direct link from the product team. / 跳转失败，请使用产品团队提供的原始链接。";
-  })();
-  </script>
+<iframe id="frame" title="Wahda Product Progress Board"></iframe>
+<div id="fb">
+  <div>Opening the Progress Board…</div>
+  <div>正在打开需求进度看板…</div>
+  <div id="hint"></div>
+</div>
+<script>
+/* The platform URL is stored encoded so it never appears as plain text in this public repo.
+   Add ?direct=1 to the URL to bypass framing and do a plain redirect instead. */
+(function () {
+  var enc = "aHR0cHM6Ly93YWhkYS1wcm9ncmVzcy5hcHAud29ya2J1ZGR5Lmhvc3QvP3NoYXJlY29kZT1FRFVPUU1RT0FL";
+  var fb = document.getElementById("fb");
+  var hint = document.getElementById("hint");
+  var url = "";
+  try { url = atob(enc); } catch (e) {}
+
+  if (!url || url.indexOf("https://") !== 0) {
+    hint.textContent = "Cannot open — please use the direct link from the product team. / 打开失败，请使用产品团队提供的原始链接。";
+    return;
+  }
+
+  if (/[?&]direct=1/.test(location.search)) { location.replace(url); return; }
+
+  var f = document.getElementById("frame");
+  f.addEventListener("load", function () { fb.classList.add("hide"); });
+  f.src = url;
+
+  setTimeout(function () {
+    if (!fb.classList.contains("hide")) {
+      hint.innerHTML = 'Loading is slow. <a href="' + url + '">Open directly</a> / 加载较慢，可<a href="' + url + '">直接打开</a>';
+    }
+  }, 9000);
+})();
+</script>
 </body>
 </html>
