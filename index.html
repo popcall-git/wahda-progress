@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wahda Product Progress | 产品进度</title>
+<meta name="robots" content="noindex,nofollow">
+<style>
+  :root { --bg:#f5f6f8; --card:#fff; --border:#e4e7ec; --text:#1a1d26; --sub:#5b6472; --accent:#0f6f5c; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px 16px; }
+  .box { width:100%; max-width:520px; }
+  h1 { font-size:19px; font-weight:700; margin-bottom:4px; }
+  .sub { font-size:12.5px; color:#a3abb6; margin-bottom:22px; letter-spacing:.4px; }
+  a.card { display:flex; align-items:center; gap:14px; background:var(--card); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:10px; padding:16px 18px; text-decoration:none; color:inherit; margin-bottom:10px; transition:border-color 150ms ease-out, transform 150ms ease-out; }
+  a.card:hover { border-color:#cfd6de; border-left-color:var(--accent); transform:translateY(-1px); }
+  a.card.secondary { border-left-color:#c7ced6; }
+  .t { font-size:14.5px; font-weight:600; }
+  .d { font-size:12.5px; color:var(--sub); margin-top:2px; }
+  .arrow { margin-left:auto; color:#b3bcc8; font-size:15px; }
+  .foot { font-size:11.5px; color:#a3abb6; margin-top:18px; line-height:1.7; }
+</style>
+</head>
+<body>
+  <div class="box">
+    <h1>Wahda Product Progress</h1>
+    <div class="sub">WAHDA 产品需求进度</div>
+    <a class="card" href="/board">
+      <div>
+        <div class="t">Progress Board</div>
+        <div class="d">需求进度看板 · 每周更新</div>
+      </div>
+      <span class="arrow">→</span>
+    </a>
+    <a class="card secondary" href="/console">
+      <div>
+        <div class="t">Team Console</div>
+        <div class="d">负责人更新后台 · 仅白名单邮箱</div>
+      </div>
+      <span class="arrow">→</span>
+    </a>
+    <div class="foot">Internal use only · 内部使用</div>
+  </div>
+</body>
+</html>

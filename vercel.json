@@ -1,0 +1,14 @@
+{
+  "redirects": [
+    {
+      "source": "/board",
+      "destination": "https://wahda-progress.app.workbuddy.host/?sharecode=EDUOQMQOAK",
+      "permanent": true
+    },
+    {
+      "source": "/console",
+      "destination": "https://wahda-progress.app.workbuddy.host/admin.html?sharecode=EDUOQMQOAK",
+      "permanent": true
+    }
+  ]
+}
