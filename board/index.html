@@ -16,10 +16,16 @@
   #fb.hide { opacity:0; pointer-events:none; }
   #hint { font-size:12.5px; color:#a3abb6; margin-top:4px; }
   #hint a { color:#0f6f5c; }
+  #pill { position:fixed; right:14px; bottom:14px; z-index:9; display:none; align-items:center; gap:6px;
+          padding:9px 14px; border-radius:999px; background:rgba(26,29,38,.9); color:#fff; text-decoration:none;
+          font:12.5px/1 -apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif;
+          box-shadow:0 4px 16px rgba(0,0,0,.18); }
+  #pill.show { display:flex; }
 </style>
 </head>
 <body>
 <iframe id="frame" title="Wahda Product Progress Board"></iframe>
+<a id="pill" href="#" target="_top">数据没出来？直接打开 ↗</a>
 <div id="fb">
   <div>Opening the Progress Board…</div>
   <div>正在打开需求进度看板…</div>
@@ -27,7 +33,13 @@
 </div>
 <script>
 /* The platform URL is stored encoded so it never appears as plain text in this public repo.
-   Add ?direct=1 to the URL to bypass framing and do a plain redirect instead. */
+
+   Why the WebKit branch exists: the platform gates its assets (cloud-sdk.js / config.js) on a
+   cookie (__wb_rsc) that it sets on first page load. Safari & every iOS browser block third-party
+   cookies, so inside an iframe those assets return 403 and the board never gets its data. Those
+   engines therefore open the board directly (first-party) instead of framing it.
+
+   Overrides: ?direct=1 forces a plain redirect, ?frame=1 forces the iframe shell. */
 (function () {
   var enc = "aHR0cHM6Ly93YWhkYS1wcm9ncmVzcy5hcHAud29ya2J1ZGR5Lmhvc3QvP3NoYXJlY29kZT1FRFVPUU1RT0FL";
   var fb = document.getElementById("fb");
@@ -40,7 +52,14 @@
     return;
   }
 
-  if (/[?&]direct=1/.test(location.search)) { location.replace(url); return; }
+  var q = location.search || "";
+  var forceDirect = /[?&]direct=1/.test(q);
+  var forceFrame = /[?&]frame=1/.test(q);
+  var ua = navigator.userAgent || "";
+  var isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  var isWebKitOnly = /AppleWebKit/.test(ua) && !/Chrome|Chromium|CriOS|FxiOS|EdgiOS|Edg\/|OPR\/|OPT\/|SamsungBrowser/.test(ua);
+
+  if (forceDirect || (!forceFrame && (isIOS || isWebKitOnly))) { location.replace(url); return; }
 
   var f = document.getElementById("frame");
   f.addEventListener("load", function () { fb.classList.add("hide"); });
@@ -50,7 +69,11 @@
     if (!fb.classList.contains("hide")) {
       hint.innerHTML = 'Loading is slow. <a href="' + url + '">Open directly</a> / 加载较慢，可<a href="' + url + '">直接打开</a>';
     }
-  }, 9000);
+    var pill = document.getElementById("pill");
+    pill.href = url;
+    pill.classList.add("show");
+    setTimeout(function () { pill.classList.remove("show"); }, 20000);
+  }, 12000);
 })();
 </script>
 </body>
